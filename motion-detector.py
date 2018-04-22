@@ -13,7 +13,6 @@ class MotionDetector:
     def __init__(self, args):
         warnings.filterwarnings('ignore')
         self.conf = json.load(open(args['conf']))
-        self.client = None
 
     def detect(self):
         # initialize the camera and grab a reference to the raw camera capture
