@@ -11,8 +11,8 @@ import cv2
 class MotionDetector:
     # filter warnings, load the configuration
     def __init__(self, args):
-        warnings.filterwarnings("ignore")
-        self.conf = json.load(open(args["conf"]))
+        warnings.filterwarnings('ignore')
+        self.conf = json.load(open(args['conf']))
         self.client = None
 
     def detect(self):
@@ -21,8 +21,8 @@ class MotionDetector:
 
         # allow the camera to warmup, then initialize the average frame, last
         # uploaded timestamp, and frame motion counter
-        print "[INFO] warming up..."
-        time.sleep(self.conf["camera_warmup_time"])
+        print '[INFO] warming up...'
+        time.sleep(self.conf['camera_warmup_time'])
         avg = None
         last_uploaded = datetime.datetime.now()
         motion_counter = 0
@@ -33,7 +33,7 @@ class MotionDetector:
             # the timestamp and occupied/unoccupied text
             ret, frame = video_capture.read()
             timestamp = datetime.datetime.now()
-            status = "Unoccupied"
+            status = 'Unoccupied'
 
             # resize the frame, convert it to grayscale, and blur it
             frame = imutils.resize(frame, width=500)
@@ -42,8 +42,8 @@ class MotionDetector:
 
             # if the average frame is None, initialize it
             if avg is None:
-                print "[INFO] starting background model..."
-                avg = gray.copy().astype("float")
+                print '[INFO] starting background model...'
+                avg = gray.copy().astype('float')
                 continue
 
             # accumulate the weighted average between the current frame and
@@ -55,7 +55,7 @@ class MotionDetector:
             # threshold the delta image, dilate the thresholded image to fill
             # in holes, then find contours on thresholded image
             thresh = cv2.threshold(
-                frame_delta, self.conf["delta_thresh"], 255, cv2.THRESH_BINARY
+                frame_delta, self.conf['delta_thresh'], 255, cv2.THRESH_BINARY
             )[1]
             thresh = cv2.dilate(thresh, None, iterations=2)
             (_, cnts, _) = cv2.findContours(
@@ -65,20 +65,20 @@ class MotionDetector:
             # loop over the contours
             for c in cnts:
                 # if the contour is too small, ignore it
-                if cv2.contourArea(c) < self.conf["min_area"]:
+                if cv2.contourArea(c) < self.conf['min_area']:
                     continue
 
                 # compute the bounding box for the contour, draw it on the
                 # frame, and update the text
                 (x, y, w, h) = cv2.boundingRect(c)
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                status = "Occupied"
+                status = 'Occupied'
 
             # draw the text and timestamp on the frame
-            ts = timestamp.strftime("%A %d %B %Y %I:%M:%S%p")
+            ts = timestamp.strftime('%A %d %B %Y %I:%M:%S%p')
             cv2.putText(
                 frame,
-                "Room Status: {}".format(status),
+                'Room Status: {}'.format(status),
                 (10, 20),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.5,
@@ -95,16 +95,16 @@ class MotionDetector:
             )
 
             # check to see if the room is occupied
-            if status == "Occupied":
+            if status == 'Occupied':
                 # check to see if enough time has passed between uploads
-                if (timestamp - last_uploaded).seconds >= self.conf["min_upload_seconds"]:
+                if (timestamp - last_uploaded).seconds >= self.conf['min_upload_seconds']:
                     # increment the motion counter
                     motion_counter += 1
 
                     # check to see if the number of frames with consistent
                     # motion is high enough
-                    if motion_counter >= self.conf["min_motion_frames"]:
-                        path = timestamp.strftime("%Y_%m_%dT%H_%M_%S" + ".jpg")
+                    if motion_counter >= self.conf['min_motion_frames']:
+                        path = timestamp.strftime('%Y_%m_%dT%H_%M_%S' + '.jpg')
                         cv2.imwrite(path, frame)
 
                         last_uploaded = timestamp
@@ -115,21 +115,21 @@ class MotionDetector:
                 motion_counter = 0
 
             # check to see if the frames should be displayed to screen
-            if self.conf["show_video"]:
+            if self.conf['show_video']:
                 # display the security feed
-                cv2.imshow("Security Feed", frame)
+                cv2.imshow('Security Feed', frame)
                 key = cv2.waitKey(1) & 0xFF
 
                 # if the `q` key is pressed, break from the lop
-                if key == ord("q"):
+                if key == ord('q'):
                     break
 
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
 ap.add_argument(
-    "-c", "--conf", required=True,
-    help="path to the JSON configuration file"
+    '-c', '--conf', required=True,
+    help='path to the JSON configuration file'
 )
 args = vars(ap.parse_args())
 
