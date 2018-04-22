@@ -33,7 +33,7 @@ class MotionDetector:
             # the timestamp and occupied/unoccupied text
             ret, frame = video_capture.read()
             timestamp = datetime.datetime.now()
-            text = "Unoccupied"
+            status = "Unoccupied"
 
             # resize the frame, convert it to grayscale, and blur it
             frame = imutils.resize(frame, width=500)
@@ -72,13 +72,13 @@ class MotionDetector:
                 # frame, and update the text
                 (x, y, w, h) = cv2.boundingRect(c)
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                text = "Occupied"
+                status = "Occupied"
 
             # draw the text and timestamp on the frame
             ts = timestamp.strftime("%A %d %B %Y %I:%M:%S%p")
             cv2.putText(
                 frame,
-                "Room Status: {}".format(text),
+                "Room Status: {}".format(status),
                 (10, 20),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.5,
@@ -95,7 +95,7 @@ class MotionDetector:
             )
 
             # check to see if the room is occupied
-            if text == "Occupied":
+            if status == "Occupied":
                 # check to see if enough time has passed between uploads
                 if (timestamp - last_uploaded).seconds >= self.conf["min_upload_seconds"]:
                     # increment the motion counter
