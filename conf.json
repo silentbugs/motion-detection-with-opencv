@@ -8,5 +8,12 @@
 	"resolution": [640, 480],
 	"fps": 10,
 	"min_area": 5000,
-	"output_directory": ""
+	"output_directory": "",
+	"rabbitmq_user": "",
+	"rabbitmq_password": "",
+	"rabbitmq_vhost": "",
+	"gmail_user": "",
+	"gmail_pass": "",
+	"mail_recipient": "",
+	"client_name": ""
 }
