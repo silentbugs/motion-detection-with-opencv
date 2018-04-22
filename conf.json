@@ -7,5 +7,6 @@
 	"delta_thresh": 5,
 	"resolution": [640, 480],
 	"fps": 10,
-	"min_area": 5000
+	"min_area": 5000,
+	"output_directory": ""
 }

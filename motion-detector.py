@@ -103,8 +103,9 @@ class MotionDetector:
                     # check to see if the number of frames with consistent
                     # motion is high enough
                     if motion_counter >= self.conf['min_motion_frames']:
-                        path = timestamp.strftime('%Y_%m_%dT%H_%M_%S' + '.jpg')
-                        cv2.imwrite(path, frame)
+                        path = self.conf['output_directory']
+                        _file = timestamp.strftime('%Y_%m_%dT%H_%M_%S' + '.jpg')
+                        cv2.imwrite(path + _file, frame)
 
                         last_uploaded = timestamp
                         motion_counter = 0
