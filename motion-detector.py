@@ -9,14 +9,13 @@ import cv2
 
 
 class MotionDetector:
-    # filter warnings, load the configuration and initialize the Dropbox
-    # client
+    # filter warnings, load the configuration
     def __init__(self, args):
         warnings.filterwarnings("ignore")
         self.conf = json.load(open(args["conf"]))
         self.client = None
 
-    def __main__(self):
+    def detect(self):
         # initialize the camera and grab a reference to the raw camera capture
         video_capture = cv2.VideoCapture(0)
 
@@ -25,8 +24,8 @@ class MotionDetector:
         print "[INFO] warming up..."
         time.sleep(self.conf["camera_warmup_time"])
         avg = None
-        lastUploaded = datetime.datetime.now()
-        motionCounter = 0
+        last_uploaded = datetime.datetime.now()
+        motion_counter = 0
 
         # capture frames from the camera
         while True:
@@ -51,12 +50,12 @@ class MotionDetector:
             # previous frames, then compute the difference between the current
             # frame and running average
             cv2.accumulateWeighted(gray, avg, 0.5)
-            frameDelta = cv2.absdiff(gray, cv2.convertScaleAbs(avg))
+            frame_delta = cv2.absdiff(gray, cv2.convertScaleAbs(avg))
 
             # threshold the delta image, dilate the thresholded image to fill
             # in holes, then find contours on thresholded image
             thresh = cv2.threshold(
-                frameDelta, self.conf["delta_thresh"], 255, cv2.THRESH_BINARY
+                frame_delta, self.conf["delta_thresh"], 255, cv2.THRESH_BINARY
             )[1]
             thresh = cv2.dilate(thresh, None, iterations=2)
             (_, cnts, _) = cv2.findContours(
@@ -69,8 +68,8 @@ class MotionDetector:
                 if cv2.contourArea(c) < self.conf["min_area"]:
                     continue
 
-                # compute the bounding box for the contour, draw it on the frame,
-                # and update the text
+                # compute the bounding box for the contour, draw it on the
+                # frame, and update the text
                 (x, y, w, h) = cv2.boundingRect(c)
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
                 text = "Occupied"
@@ -98,22 +97,22 @@ class MotionDetector:
             # check to see if the room is occupied
             if text == "Occupied":
                 # check to see if enough time has passed between uploads
-                if (timestamp - lastUploaded).seconds >= self.conf["min_upload_seconds"]:
+                if (timestamp - last_uploaded).seconds >= self.conf["min_upload_seconds"]:
                     # increment the motion counter
-                    motionCounter += 1
+                    motion_counter += 1
 
-                    # check to see if the number of frames with consistent motion is
-                    # high enough
-                    if motionCounter >= self.conf["min_motion_frames"]:
+                    # check to see if the number of frames with consistent
+                    # motion is high enough
+                    if motion_counter >= self.conf["min_motion_frames"]:
                         path = timestamp.strftime("%b-%d_%H_%M_%S" + ".jpg")
                         cv2.imwrite(path, frame)
 
-                        lastUploaded = timestamp
-                        motionCounter = 0
+                        last_uploaded = timestamp
+                        motion_counter = 0
 
             # otherwise, the room is not occupied
             else:
-                motionCounter = 0
+                motion_counter = 0
 
             # check to see if the frames should be displayed to screen
             if self.conf["show_video"]:
@@ -134,5 +133,6 @@ ap.add_argument(
 )
 args = vars(ap.parse_args())
 
+# initialize the class
 motion_detector = MotionDetector(args)
-motion_detector.__main__()
+motion_detector.detect()
