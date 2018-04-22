@@ -9,8 +9,12 @@ import cv2
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-c", "--conf", required=True,
-    help="path to the JSON configuration file")
+ap.add_argument(
+    "-c",
+    "--conf",
+    required=True,
+    help="path to the JSON configuration file"
+)
 args = vars(ap.parse_args())
 
 # filter warnings, load the configuration and initialize the Dropbox
@@ -58,11 +62,13 @@ while True:
 
     # threshold the delta image, dilate the thresholded image to fill
     # in holes, then find contours on thresholded image
-    thresh = cv2.threshold(frameDelta, conf["delta_thresh"], 255,
-        cv2.THRESH_BINARY)[1]
+    thresh = cv2.threshold(
+        frameDelta, conf["delta_thresh"], 255, cv2.THRESH_BINARY
+    )[1]
     thresh = cv2.dilate(thresh, None, iterations=2)
-    (_, cnts, _) = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
-        cv2.CHAIN_APPROX_SIMPLE)
+    (_, cnts, _) = cv2.findContours(
+        thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+    )
 
     # loop over the contours
     for c in cnts:
@@ -78,10 +84,23 @@ while True:
 
     # draw the text and timestamp on the frame
     ts = timestamp.strftime("%A %d %B %Y %I:%M:%S%p")
-    cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
-        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-    cv2.putText(frame, ts, (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX,
-        0.35, (0, 0, 255), 1)
+    cv2.putText(
+        frame,
+        "Room Status: {}".format(text),
+        (10, 20),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.5,
+        (0, 0, 255),
+        2
+    )
+    cv2.putText(
+        frame, ts,
+        (10, frame.shape[0] - 10),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.35,
+        (0, 0, 255),
+        1
+    )
 
     # check to see if the room is occupied
     if text == "Occupied":
