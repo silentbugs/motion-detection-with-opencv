@@ -9,6 +9,13 @@ import cv2
 
 
 class MotionDetector:
+    STATUS_OCCUPIED = 'occupied'
+    STATUS_UNOCCUPIED = 'unoccupied'
+    STATUS_CHOICES = {
+        STATUS_OCCUPIED: 'Occupied',
+        STATUS_UNOCCUPIED: 'Unoccupied',
+    }
+
     # filter warnings, load the configuration
     def __init__(self, args):
         warnings.filterwarnings('ignore')
@@ -32,7 +39,7 @@ class MotionDetector:
             # the timestamp and occupied/unoccupied text
             ret, frame = video_capture.read()
             timestamp = datetime.datetime.now()
-            status = 'Unoccupied'
+            status = self.STATUS_UNOCCUPIED
 
             # resize the frame, convert it to grayscale, and blur it
             frame = imutils.resize(frame, width=500)
@@ -71,13 +78,13 @@ class MotionDetector:
                 # frame, and update the text
                 (x, y, w, h) = cv2.boundingRect(c)
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                status = 'Occupied'
+                status = self.STATUS_OCCUPIED
 
             # draw the text and timestamp on the frame
             ts = timestamp.strftime('%A %d %B %Y %I:%M:%S%p')
             cv2.putText(
                 frame,
-                'Room Status: {}'.format(status),
+                'Room Status: {}'.format(self.STATUS_CHOICES[status]),
                 (10, 20),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.5,
@@ -94,7 +101,7 @@ class MotionDetector:
             )
 
             # check to see if the room is occupied
-            if status == 'Occupied':
+            if status == self.STATUS_OCCUPIED:
                 # check to see if enough time has passed between uploads
                 if (timestamp - last_uploaded).seconds >= self.conf['min_upload_seconds']:
                     # increment the motion counter
