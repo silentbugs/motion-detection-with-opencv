@@ -120,7 +120,7 @@ class MotionDetector:
                 cv2.imshow('Security Feed', frame)
                 key = cv2.waitKey(1) & 0xFF
 
-                # if the `q` key is pressed, break from the lop
+                # if the `q` key is pressed, break from the loop
                 if key == ord('q'):
                     break
 
