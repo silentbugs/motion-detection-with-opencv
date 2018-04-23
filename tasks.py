@@ -12,7 +12,7 @@ app.config_from_object('celery_config')
 @app.task
 def exec_notify():
     send_email(
-        conf['mail_recipient'],
-        "Security Alert from %s" % conf['client_name'],
-        "Motion has been detected in %s." % conf['client_name']
+        conf['mail']['recipient'],
+        "Security Alert from %s" % conf['mail']['client_name'],
+        "Motion has been detected in %s." % conf['mail']['client_name']
     )

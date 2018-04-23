@@ -1,20 +1,28 @@
 {
-	"show_video": true,
-	"use_dropbox": false,
-	"min_upload_seconds": 3.0,
-	"min_motion_frames": 8,
-	"camera_warmup_time": 2.5,
-	"delta_thresh": 5,
-	"resolution": [640, 480],
-	"fps": 10,
-	"min_area": 5000,
-	"output_directory": "",
-	"rabbitmq_host_url": "localhost:5672",
-	"rabbitmq_user": "",
-	"rabbitmq_password": "",
-	"rabbitmq_vhost": "",
-	"gmail_user": "",
-	"gmail_pass": "",
-	"mail_recipient": "",
-	"client_name": ""
+	"main": {
+		"show_video": true,
+		"use_dropbox": false,
+		"min_upload_seconds": 0.2,
+		"min_motion_frames": 1,
+		"camera_warmup_time": 2.5,
+		"delta_thresh": 1,
+		"resolution": [640, 480],
+		"fps": 20,
+		"min_area": 5000
+	},
+	"extra": {
+		"output_directory": ""
+	},
+	"rabbitmq": {
+		"host": "localhost:5672",
+		"user": "",
+		"password": "",
+		"vhost": ""
+	},
+	"mail": {
+		"recipient": "",
+		"gmail_username": "",
+		"gmail_password": "",
+		"client_name": ""
+	}
 }

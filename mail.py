@@ -8,14 +8,14 @@ from email import Encoders
 
 conf = json.load(open('conf.json'))
 
-gmail_user = conf['gmail_user']
-gmail_pass = conf['gmail_pass']
+gmail_username = conf['mail']['gmail_username']
+gmail_password = conf['mail']['gmail_password']
 
 
 def send_email(to, subject, body, attachment=None):
     msg = MIMEMultipart()
 
-    msg['From'] = gmail_user
+    msg['From'] = gmail_username
     msg['To'] = to
     msg['Subject'] = subject
 
@@ -34,7 +34,7 @@ def send_email(to, subject, body, attachment=None):
     server_connect = False
     try:
         smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', '465')
-        smtp_server.login(gmail_user, gmail_pass)
+        smtp_server.login(gmail_username, gmail_password)
         server_connect = True
     except smtplib.SMTPHeloError as e:
         print 'Server did not reply'
@@ -45,7 +45,7 @@ def send_email(to, subject, body, attachment=None):
 
     if server_connect:
         try:
-            smtp_server.sendmail(gmail_user, [to], msg.as_string())
+            smtp_server.sendmail(gmail_username, [to], msg.as_string())
             print 'Successfully sent email'
         except smtplib.SMTPException as e:
             print 'Error: unable to send email', e

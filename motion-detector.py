@@ -30,7 +30,7 @@ class MotionDetector:
         # allow the camera to warmup, then initialize the average frame, last
         # uploaded timestamp, and frame motion counter
         print '[INFO] warming up...'
-        time.sleep(self.conf['camera_warmup_time'])
+        time.sleep(self.conf['main']['camera_warmup_time'])
         avg = None
         last_uploaded = datetime.datetime.now()
         motion_counter = 0
@@ -63,7 +63,7 @@ class MotionDetector:
             # threshold the delta image, dilate the thresholded image to fill
             # in holes, then find contours on thresholded image
             thresh = cv2.threshold(
-                frame_delta, self.conf['delta_thresh'], 255, cv2.THRESH_BINARY
+                frame_delta, self.conf['main']['delta_thresh'], 255, cv2.THRESH_BINARY
             )[1]
             thresh = cv2.dilate(thresh, None, iterations=2)
             (_, cnts, _) = cv2.findContours(
@@ -73,7 +73,7 @@ class MotionDetector:
             # loop over the contours
             for c in cnts:
                 # if the contour is too small, ignore it
-                if cv2.contourArea(c) < self.conf['min_area']:
+                if cv2.contourArea(c) < self.conf['main']['min_area']:
                     continue
 
                 # compute the bounding box for the contour, draw it on the
@@ -105,15 +105,15 @@ class MotionDetector:
             # check to see if the room is occupied
             if status == self.STATUS_OCCUPIED:
                 # check to see if enough time has passed between uploads
-                if (timestamp - last_uploaded).seconds >= self.conf['min_upload_seconds']:
+                if (timestamp - last_uploaded).seconds >= self.conf['main']['min_upload_seconds']:
                     # increment the motion counter
                     motion_counter += 1
 
                     # check to see if the number of frames with consistent
                     # motion is high enough
-                    if motion_counter >= self.conf['min_motion_frames']:
+                    if motion_counter >= self.conf['main']['min_motion_frames']:
                         exec_notify.delay()
-                        path = self.conf['output_directory']
+                        path = self.conf['extra']['output_directory']
                         _file = timestamp.strftime('%Y_%m_%dT%H_%M_%S' + '.jpg')
                         cv2.imwrite(path + _file, frame)
 
@@ -125,7 +125,7 @@ class MotionDetector:
                 motion_counter = 0
 
             # check to see if the frames should be displayed to screen
-            if self.conf['show_video']:
+            if self.conf['main']['show_video']:
                 # display the security feed
                 cv2.imshow('Security Feed', frame)
                 key = cv2.waitKey(1) & 0xFF
