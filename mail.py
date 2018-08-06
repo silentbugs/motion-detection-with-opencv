@@ -29,7 +29,7 @@ def send_email(to, subject, body, attachment=None):
             'Content-Disposition',
             'attachment; filename="%s"' % os.path.basename(attachment)
         )
-        msg.attachment(part)
+        msg.attach(part)
 
     server_connect = False
     try:
