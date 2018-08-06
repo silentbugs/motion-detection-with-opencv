@@ -117,7 +117,12 @@ class MotionDetector:
 
                         path = self.conf['extra']['output_directory']
                         _file = timestamp.strftime('%Y_%m_%dT%H_%M_%S' + '.jpg')
-                        cv2.imwrite(path + _file, frame)
+
+                        if self.conf['main']['dry_run']:
+                            print 'file: %s' % (path + _file)
+
+                        else:
+                            cv2.imwrite(path + _file, frame)
 
                         last_uploaded = timestamp
                         motion_counter = 0

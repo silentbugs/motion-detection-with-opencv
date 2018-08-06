@@ -9,7 +9,8 @@
 		"resolution": [640, 480],
 		"fps": 20,
 		"min_area": 5000,
-		"use_celery": true
+		"use_celery": true,
+		"dry_run": true
 	},
 	"extra": {
 		"output_directory": ""
