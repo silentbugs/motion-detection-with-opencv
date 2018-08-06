@@ -112,9 +112,6 @@ class MotionDetector:
                     # check to see if the number of frames with consistent
                     # motion is high enough
                     if motion_counter >= self.conf['main']['min_motion_frames']:
-                        if self.conf['main']['use_celery']:
-                            exec_notify.delay()
-
                         path = self.conf['extra']['output_directory']
                         _file = timestamp.strftime('%Y_%m_%dT%H_%M_%S' + '.jpg')
 
@@ -126,6 +123,9 @@ class MotionDetector:
 
                         last_uploaded = timestamp
                         motion_counter = 0
+
+                        if self.conf['main']['use_celery']:
+                            exec_notify.delay('%s' % (path + _file))
 
             # otherwise, the room is not occupied
             else:

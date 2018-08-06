@@ -10,7 +10,7 @@ app.config_from_object('celery_config')
 
 
 @app.task
-def exec_notify():
+def exec_notify(attachment):
     recipient = conf['mail']['recipient']
     client_name = conf['mail']['client_name']
 
@@ -18,7 +18,8 @@ def exec_notify():
         send_email(
             recipient,
             "Security Alert from %s" % client_name,
-            "Motion has been detected in %s." % client_name
+            "Motion has been detected in %s." % client_name,
+            attachment=attachment,
         )
     else:
         print 'emailing: %s with %s' % (recipient, client_name)
