@@ -1,4 +1,5 @@
 import json
+import datetime
 from celery import Celery
 from mail import send_email
 
@@ -10,7 +11,7 @@ app.config_from_object('celery_config')
 
 
 @app.task
-def exec_notify(attachment):
+def exec_notify(attachment=None):
     recipient = conf['mail']['recipient']
     client_name = conf['mail']['client_name']
 
@@ -18,7 +19,10 @@ def exec_notify(attachment):
         send_email(
             recipient,
             "Security Alert from %s" % client_name,
-            "Motion has been detected in %s." % client_name,
+            "Motion has been detected in %s, at %s" % (
+                client_name,
+                str(datetime.datetime.now())
+            ),
             attachment=attachment,
         )
     else:

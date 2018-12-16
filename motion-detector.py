@@ -124,8 +124,13 @@ class MotionDetector:
                         last_uploaded = timestamp
                         motion_counter = 0
 
+                        attachment = None
+
+                        if self.conf['main']['add_attachments']:
+                            attachment = (path + _file)
+
                         if self.conf['main']['use_celery']:
-                            exec_notify.delay('%s' % (path + _file))
+                            exec_notify.delay(attachment)
 
             # otherwise, the room is not occupied
             else:
