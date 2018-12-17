@@ -2,6 +2,7 @@
 	"main": {
 		"add_attachments": false,
 		"camera_warmup_time": 2.5,
+		"client_name": "sample",
 		"delta_thresh": 1,
 		"dry_run": true,
 		"fps": 20,
@@ -26,6 +27,6 @@
 		"recipient": "",
 		"gmail_username": "",
 		"gmail_password": "",
-		"client_name": ""
+		"gmail_password": ""
 	}
 }

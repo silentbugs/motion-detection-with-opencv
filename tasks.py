@@ -13,7 +13,7 @@ app.config_from_object('celery_config')
 @app.task
 def exec_notify(attachment=None):
     recipient = conf['mail']['recipient']
-    client_name = conf['mail']['client_name']
+    client_name = conf['main']['client_name']
 
     if not conf['main']['dry_run']:
         send_email(
