@@ -1,17 +1,17 @@
 {
 	"main": {
-		"show_video": true,
-		"use_dropbox": false,
 		"add_attachments": false,
-		"min_upload_seconds": 0.2,
-		"min_motion_frames": 1,
 		"camera_warmup_time": 2.5,
 		"delta_thresh": 1,
-		"resolution": [640, 480],
+		"dry_run": true,
 		"fps": 20,
 		"min_area": 5000,
+		"min_motion_frames": 1,
+		"min_upload_seconds": 0.2,
+		"resolution": [640, 480],
+		"show_video": true,
 		"use_celery": true,
-		"dry_run": true
+		"use_dropbox": false
 	},
 	"extra": {
 		"output_directory": ""
