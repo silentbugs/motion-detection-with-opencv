@@ -24,9 +24,15 @@
 		"vhost": ""
 	},
 	"mail": {
+		"enable": false,
 		"recipient": "",
 		"gmail_username": "",
 		"gmail_password": "",
 		"gmail_password": ""
+	},
+	"signal": {
+		"enable": true,
+		"recipient": "+440000000000",
+		"sender": "+440000000000"
 	}
 }

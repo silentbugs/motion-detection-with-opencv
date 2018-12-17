@@ -16,3 +16,7 @@ $ pip install -r requirements.txt
 $ python motion-detector.py -c conf.json
 $ celery -A tasks worker -l info
 ```
+
+In order to use [signal](https://signal.org/) you need to:
+- install [signal-cli](https://aur.archlinux.org/packages/signal-cli/)
+- link your computer with your signal account
